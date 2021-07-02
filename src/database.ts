@@ -6,17 +6,24 @@ export const users: UsersStore = new Map()
 export const tokens: RefreshTokensStore = new Map()
 
 export function seedUserStore() {
-  users.set('diego@rocketseat.team', {
+  users.set('estudante@gmail.com', {
+    password: '123456',
+    permissions: ['users.list', 'metrics.list'],
+    roles: ['student']
+  })
+
+  users.set('teacher@gmail.com', {
+    password: '123456',
+    permissions: ['users.list', 'metrics.list'],
+    roles: ['teacher']
+  })
+
+  users.set('admin@playmatch.gg', {
     password: '123456',
     permissions: ['users.list', 'users.create', 'metrics.list'],
     roles: ['administrator']
   })
-
-  users.set('estagiario@rocketseat.team', {
-    password: '123456',
-    permissions: ['users.list', 'metrics.list'],
-    roles: ['editor']
-  })
+  
 }
 
 export function createRefreshToken(email: string) {

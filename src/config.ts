@@ -1,3 +1,4 @@
+// Senha senha do JWT
 export const auth = {
-  secret: 'supersecret'
+  secret: 'PLAYMATCH_SENHA_SECRETA'
 } as const;

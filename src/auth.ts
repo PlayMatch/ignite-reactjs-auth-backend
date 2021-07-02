@@ -6,7 +6,7 @@ import { createRefreshToken } from './database';
 export function generateJwtAndRefreshToken(email: string, payload: object = {}) {
   const token = jwt.sign(payload, auth.secret, {
     subject: email,
-    expiresIn: 60, // Tempo para expirar um token (em segundos)
+    expiresIn: 60 * 15, // Tempo para expirar um token (em segundos)
   });
 
   const refreshToken = createRefreshToken(email)

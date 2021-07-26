@@ -21,7 +21,7 @@ function checkAuthMiddleware(request: Request, response: Response, next: NextFun
   if (!authorization) {
     return response
       .status(401)
-      .json({ error: true, code: 'token.invalid', message: 'Token not present.' })
+      .json({ error: 'token.invalid', message: 'Token not present' })
   }
 
   const [, token] = authorization?.split(' ');
@@ -29,7 +29,7 @@ function checkAuthMiddleware(request: Request, response: Response, next: NextFun
   if (!token) {
     return response 
       .status(401)
-      .json({ error: true, code: 'token.invalid', message: 'Token not present.' })
+      .json({ error: 'token.invalid', message: 'Token not present' })
   }
 
   try {
@@ -42,7 +42,7 @@ function checkAuthMiddleware(request: Request, response: Response, next: NextFun
 
     return response 
       .status(401)
-      .json({  error: true, code: 'token.expired', message: 'Token invalid.' })
+      .json({  error: 'token.expired', message: 'Token invalid' })
   }
 }
 
@@ -52,7 +52,7 @@ function addUserInformationToRequest(request: Request, response: Response, next:
   if (!authorization) {
     return response
       .status(401)
-      .json({ error: true, code: 'token.invalid', message: 'Token not present.' })
+      .json({ error: 'token.invalid', message: 'Token not present' })
   }
 
   const [, token] = authorization?.split(' ');
@@ -60,7 +60,7 @@ function addUserInformationToRequest(request: Request, response: Response, next:
   if (!token) {
     return response 
       .status(401)
-      .json({ error: true, code: 'token.invalid', message: 'Token not present.' })
+      .json({ error: 'token.invalid', message: 'Token not present' })
   }
 
   try {
@@ -72,7 +72,7 @@ function addUserInformationToRequest(request: Request, response: Response, next:
   } catch (err) {
     return response 
       .status(401)
-      .json({ error: true, code: 'token.invalid', message: 'Invalid token format.' })
+      .json({ error: 'token.invalid', message: 'Invalid token format' })
   }
 }
 
@@ -84,10 +84,11 @@ app.post('/sessions', (request, response) => {
   if (!user || password !== user.password) {
     return response
       .status(401)
-      .json({ 
-        error: true, 
-        message: 'E-mail or password incorrect.'
-      });
+      .json([{ 
+        code: 1,
+        messageKey: 'invalid_user',
+        detail: 'E-mail or password incorrect.'
+      }]);
   }
 
   const { token, refreshToken } = generateJwtAndRefreshToken(email, {
@@ -113,7 +114,7 @@ app.post('/refresh', addUserInformationToRequest, (request, response) => {
     return response
       .status(401)
       .json({ 
-        error: true, 
+        error: 'invalid.user',
         message: 'User not found.'
       });
   }
@@ -121,7 +122,7 @@ app.post('/refresh', addUserInformationToRequest, (request, response) => {
   if (!refreshToken) {
     return response
       .status(401)
-      .json({ error: true, message: 'Refresh token is required.' });
+      .json({ error: 'invalid.refreshToken', message: 'Refresh token is required' });
   }
 
   const isValidRefreshToken = checkRefreshTokenIsValid(email, refreshToken)
@@ -129,7 +130,7 @@ app.post('/refresh', addUserInformationToRequest, (request, response) => {
   if (!isValidRefreshToken) {
     return response
       .status(401)
-      .json({ error: true, message: 'Refresh token is invalid.' });
+      .json({ error: 'invalid.refreshToken', message: 'Refresh token is invalid' });
   }
 
   invalidateRefreshToken(email, refreshToken)
@@ -155,7 +156,7 @@ app.get('/me', checkAuthMiddleware, (request, response) => {
   if (!user) {
     return response
       .status(400)
-      .json({ error: true, message: 'User not found.' });
+      .json({ error: 'invalid.user', message: 'User not found.' });
   }
 
   return response.json({
